@@ -72,22 +72,24 @@ public class DataCatcher {
     private static final String KEY_NAME = "name";
     private static final String KEY_CHILDREN = "children";
 
-    private JSONArray get(String url, int level, JSONObject regionJsonObj) {
+    private void get(String url, int level, JSONObject regionJsonObj) {
         Document document = getHtmlContent(url);
         String parentId = findStrByRegEx(url, REGION_ID_REG_EXP);
         Elements elements = document.select(ELE_LIST[level]);
+        JSONArray jsonArray = new JSONArray();
         for (Element element : elements) {
             JSONObject jsonObject = new JSONObject();
             String name = element.text();
             jsonObject.put(KEY_PARENT_ID, parentId);
             jsonObject.put(KEY_NAME, name);
             jsonObject.put(KEY_LEVEL, level);
-
-            String nextUrl = element.attr("href");
+            if (level < MAX_LEVEL) {
+                String nextUrl = element.attr("href");
+                get(nextUrl, level++, regionJsonObj);
+            }
+            jsonArray.add(jsonObject);
         }
-
-
-        return null;
+        regionJsonObj.put(KEY_CHILDREN, jsonArray);
     }
 
 
