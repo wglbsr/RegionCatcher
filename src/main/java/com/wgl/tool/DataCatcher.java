@@ -35,8 +35,9 @@ public class DataCatcher {
         ELE_LIST[2] = "tr.counrytr td a";
         ELE_LIST[3] = "tr.towntr td a";
         ELE_LIST[4] = "tr.villagetr td";
-
-        getProvincesElement(START_URL);
+        JSONObject jsonObject = new JSONObject();
+        get(START_URL, 0, jsonObject);
+        System.out.println(jsonObject.toJSONString());
     }
 
 
@@ -51,20 +52,6 @@ public class DataCatcher {
     }
     //provincetr,citytr,countytr,towntr,villagetr
 
-    /**
-     * @return org.jsoup.select.Elements
-     * @Author wanggl(lane)
-     * @Description //TODO 获取省份元素
-     * @Date 16:23 2019-02-19
-     * @Param [document]
-     **/
-    private JSONObject getProvincesElement(String url) {
-        JSONObject jsonObject = new JSONObject();
-        Document document = getHtmlContent(url);
-        Elements provinceLines = document.select("tr.provincetr td a");
-
-        return jsonObject;
-    }
 
     private static final String KEY_ID = "id";
     private static final String KEY_PARENT_ID = "parent_id";
@@ -84,6 +71,7 @@ public class DataCatcher {
             jsonObject.put(KEY_NAME, name);
             jsonObject.put(KEY_LEVEL, level);
             if (level < MAX_LEVEL) {
+                //区分不同级别元素的位置
                 String nextUrl = element.attr("href");
                 get(nextUrl, level++, regionJsonObj);
             }
