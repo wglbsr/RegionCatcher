@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
 public class DataCatcher {
     private static final String BASE_URL = "http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2018/";
     private static final String START_URL = "index.html";
-    private static String REGION_ID_REG_EXP_FIRST = "^\\d{2}(?=\\.html)";//正则表达式,后发零宽断言
-    private static String REGION_ID_REG_EXP_OTHER = "(?<=/)\\d{2,12}(?=\\.html)";//正则表达式,后发和先行零宽断言
+    private static String REGION_ID_REG_EXP_FIRST = "^\\d{2,12}(?=\\.html)";//后发零宽断言,抓取"11/1101.html"里面的1101
+    private static String REGION_ID_REG_EXP_OTHER = "(?<=/)\\d{2,12}(?=\\.html)";//后发和先行零宽断言,抓取"11/1101.html"里面的1101
 
     private static final int MAX_LEVEL = 1;
     private static String[] ELE_LIST = new String[MAX_LEVEL + 1];
@@ -61,7 +61,7 @@ public class DataCatcher {
 
     private void get(String url, int level, JSONObject regionJsonObj) {
         Document document = getHtmlContent(url);
-        String parentId = findStrByRegEx(url, level == 0 ? REGION_ID_REG_EXP_FIRST : REGION_ID_REG_EXP_OTHER);
+        String parentId = findStrByRegEx(url, REGION_ID_REG_EXP_FIRST);
         Elements elements = document.select(ELE_LIST[level]);
         JSONArray jsonArray = new JSONArray();
         for (Element element : elements) {
@@ -73,6 +73,12 @@ public class DataCatcher {
             jsonObject.put(KEY_LEVEL, thisLevel);
             System.out.println("level:" + thisLevel);
             if (thisLevel < MAX_LEVEL) {
+                //区分不同级别元素的位置
+                //区分不同级别元素的位置
+                //区分不同级别元素的位置
+                //区分不同级别元素的位置
+                //区分不同级别元素的位置
+                //区分不同级别元素的位置
                 //区分不同级别元素的位置
                 String nextUrl = element.attr("href");
                 thisLevel++;
