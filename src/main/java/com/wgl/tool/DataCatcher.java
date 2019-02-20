@@ -20,8 +20,7 @@ import java.util.regex.Pattern;
 public class DataCatcher {
     private static final String BASE_URL = "http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2018/";
     private static final String START_URL = "index.html";
-    private static String REGION_ID_REG_EXP_FIRST = "^\\d{2,12}(?=\\.html)";//后发零宽断言,抓取"11/1101.html"里面的1101
-    private static String REGION_ID_REG_EXP_OTHER = "(?<=/)\\d{2,12}(?=\\.html)";//后发和先行零宽断言,抓取"11/1101.html"里面的1101
+    private static String REGION_ID_REG_EXP_FIRST = "^\\d{2,12}(?=\\.html)";//后发零宽断言,抓取形如"*1101.html"里面的1101
 
     private static final int MAX_LEVEL = 1;
     private static String[] ELE_LIST = new String[MAX_LEVEL + 1];
