@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,6 +53,13 @@ public class DataCatcher {
         return document;
     }
 
+    private String filter(int level, Element element, String key) {
+        if (level == 0) {
+
+        }
+        return null;
+    }
+
     private static final String KEY_ID = "id";
     private static final String KEY_PARENT_ID = "parent_id";
     private static final String KEY_LEVEL = "level";
@@ -63,27 +71,45 @@ public class DataCatcher {
         String parentId = findStrByRegEx(url, REGION_ID_REG_EXP_FIRST);
         Elements elements = document.select(ELE_LIST[level]);
         JSONArray jsonArray = new JSONArray();
+        int index = 0;
+        int divisor = level > 0 ? (level == MAX_LEVEL ? 3 : 2) : 1;
         for (Element element : elements) {
+            //区分不同级别元素的位置
+            //区分不同级别元素的位置
+            //区分不同级别元素的位置
+            //level      id       parentId        name
+            //省        0 href      固定          0 text
+            //市        0 text    parent_url     1 text
+            //区        0 text    parent_url     1 text
+            //镇、街道   0 text   parent_url     1 text
+            //村委       0 text   parent_url     2 text
+
             int thisLevel = level;
             JSONObject jsonObject = new JSONObject();
+            String id = element.text();
+            jsonObject.put(KEY_PARENT_ID, parentId);//**
+
+
             String name = element.text();
-            jsonObject.put(KEY_PARENT_ID, parentId);
             jsonObject.put(KEY_NAME, name);
+
+
+
+
+
+            jsonObject.put(KEY_ID, id);
+
+
+
             jsonObject.put(KEY_LEVEL, thisLevel);
             System.out.println("level:" + thisLevel);
             if (thisLevel < MAX_LEVEL) {
-                //区分不同级别元素的位置
-                //区分不同级别元素的位置
-                //区分不同级别元素的位置
-                //区分不同级别元素的位置
-                //区分不同级别元素的位置
-                //区分不同级别元素的位置
-                //区分不同级别元素的位置
                 String nextUrl = element.attr("href");
                 thisLevel++;
                 get(nextUrl, thisLevel, jsonObject);
             }
             jsonArray.add(jsonObject);
+            index++;
         }
         regionJsonObj.put(KEY_CHILDREN, jsonArray);
     }
